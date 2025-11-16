@@ -1,0 +1,7 @@
+# Environment variables
+# Ignore all .env files (e.g., .env, .env.local, .env.production)
+.env*
+
+# Dependencies
+# Ignore the node_modules directory
+node_modules/
