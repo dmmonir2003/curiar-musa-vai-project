@@ -1,0 +1,23 @@
+import LandingPage from "./LandingPage";
+import Step1  from "./Step1";
+import Step2 from './Step2';
+import Step3 from "./Step3";
+import Step4 from "./Step4";
+import Step5 from "./Step5";
+import Step6 from "./Step6";
+import TermsPage from "./TermsPage";
+import PrivacyPage from "./PrivacyPage";
+import ContactUs from "./ContactUs";
+import CourierSignup from "./CourierSignup";
+import DailyRoutes from "./DailyRoutes";
+import Howhetwerkt from "./Howhetwerkt";
+import Prices from "./Prices";
+import OverKoerier from "./OverKoerier";
+import Blog from "./Blog";
+import BlogDetail from "./BlogDetail";
+import Categories from "./Categories";
+import Duurzaamheid from "./Duurzaamheid";
+import Vertrouwen from "./Vertrouwen";
+import Wordbrenger from "./Wordbrenger";
+
+export { LandingPage, Step1, Step2, Step3, Step4, Step5, Step6, TermsPage, PrivacyPage, ContactUs, CourierSignup, DailyRoutes, Howhetwerkt, Prices, OverKoerier, Blog, BlogDetail, Categories, Duurzaamheid, Vertrouwen, Wordbrenger };
