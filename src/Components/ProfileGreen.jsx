@@ -98,11 +98,11 @@ const ProfileGreen = ({
               </div>
               <div className="flex items-center gap-3">
                 <span className="font-semibold w-16">Phone:</span>
-                <p>{user?.phoneNumber}</p>
+                <p>{user?.phone}</p>
               </div>
               <div className="flex items-center gap-3">
                 <span className="font-semibold w-16">Location:</span>
-                <p>{user?.address?.address}</p>
+                <p>{user?.companyLocation}</p>
               </div>
             </>
           )}

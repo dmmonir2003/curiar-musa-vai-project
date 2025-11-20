@@ -1,87 +1,97 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import DashboardLayout from "../../Layouts/Dashboard";
-import UserImage from "./../../assets/user_image.jpg";
 import On from "./../../assets/on.svg";
 import Off from "./../../assets/off.svg";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaHeadphonesAlt } from "react-icons/fa";
 import ProfileGreen from "../../Components/ProfileGreen";
 import { useDispatch, useSelector } from "react-redux";
-import { selectAccessToken, selectUser, selectUserType, setUser } from "../../store/userSlice";
+import {
+  selectAccessToken,
+  selectUser,
+  selectUserType,
+  setUser,
+} from "../../store/userSlice";
 import useCreateOrEdit from "../../hooks/useCreateOrEdit";
 import toast from "react-hot-toast";
 import { MAPS_API_KEY, UPDATE_PROFILE } from "../../constants";
-import httpRequset from '../../axios/index'
+import httpRequset from "../../axios/index";
 import { StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
 
 const DashboardUser = () => {
   const [emailnotif, setEmailNotif] = useState(false);
   const [deliverynotif, setDeliveryNotif] = useState(true);
   const [loading, setLoading] = useState(false);
+
+  // Initialize address as an object
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phoneNumber: "",
-    address: {},
-    profileImage: null
+    companyLocation: {}, // Changed to match your login logic
+    profileImage: null,
   });
+
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const accessToken = useSelector(selectAccessToken);
   const { submitData } = useCreateOrEdit();
-  const userType = useSelector(selectUserType)
-  console.log('userType', user)
+  const userType = useSelector(selectUserType);
 
-    const { isLoaded } = useJsApiLoader({
-      id: "google-map-script",
-      googleMapsApiKey: MAPS_API_KEY,
-      libraries: ["places"],
-    });
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: MAPS_API_KEY,
+    libraries: ["places"],
+  });
 
   const inputRef = useRef(null);
 
-const handlePlaceChanged = () => {
- const [place] = inputRef.current.getPlaces();
-    const lat = place.geometry.location.lat();
-    const lng = place.geometry.location.lng();
+  const handlePlaceChanged = () => {
+    const [place] = inputRef.current.getPlaces();
+    if (place) {
+      const lat = place.geometry.location.lat();
+      const lng = place.geometry.location.lng();
 
-    setFormData(prev => ({
-      ...prev,
-      address:{ address: place.formatted_address , lat , lng},
-      
-}));
-}
-  // Initialize form data with user data
- React.useEffect(() => {
-  if (user) {
-    const initialAddress = user.address || user.companyLocation || {};
-    setFormData({
-      firstName: user.firstName || "",
-      lastName: user.lastName || "",
-      email: user.email || "",
-      phoneNumber: user.phoneNumber || "",
-      address: {
-        address: initialAddress.address || "",
-        lat: initialAddress.lat || null,
-        lng: initialAddress.lng || null
-      },
-      profileImage: user.profileImage || null,
-    });
-    setEmailNotif(user.emailNotifications || false);
-    setDeliveryNotif(user.alertsDelivery || true);
-    setImagePreview(user.profileImage || null);
-  }
-}, [user]);
+      setFormData((prev) => ({
+        ...prev,
+        companyLocation: { companyLocation: place.formatted_address, lat, lng },
+      }));
+    }
+  };
 
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        firstName: user.name?.firstName || "",
+        lastName: user.name?.lastName || "",
+        email: user.email || "",
+        phoneNumber: user.phone || "",
+        // Handle object or string location safely
+        companyLocation:
+          typeof user.companyLocation === "object"
+            ? user.companyLocation
+            : {
+                companyLocation: user.companyLocation || "",
+                lat: null,
+                lng: null,
+              },
+        profileImage: user.profileImg || null,
+      });
+
+      setEmailNotif(user.emailNotifications || false);
+      setDeliveryNotif(user.alertsDelivery || true);
+      setImagePreview(user.profileImg || null);
+    }
+  }, [user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -90,56 +100,77 @@ const handlePlaceChanged = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const base64String = reader.result; // This is the base64 string
+        const base64String = reader.result;
         setImagePreview(base64String);
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
-          profileImage: base64String // Store base64 string instead of File
+          profileImage: base64String,
         }));
       };
-      reader.readAsDataURL(file); // This converts to base64
+      reader.readAsDataURL(file);
     }
   };
 
+  // --- UPDATED FUNCTION ---
   const updateProfile = async () => {
     try {
       setLoading(true);
       const formDataToSend = new FormData();
-      
-      // Append all fields to formData
-      formDataToSend.append('firstName', formData.firstName);
-      formDataToSend.append('lastName', formData.lastName);
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('phoneNumber', formData.phoneNumber);
-      // formDataToSend.append('address', formData.address);
-       // Append address components separately
-    if (formData.address) {
-      formDataToSend.append('address[address]', formData.address.address || '');
-      formDataToSend.append('address[lat]', formData.address.lat || '');
-      formDataToSend.append('address[lng]', formData.address.lng || '');
-    }
-      formDataToSend.append('emailNotifications', emailnotif);
-      formDataToSend.append('alertsDelivery', deliverynotif);
-      formDataToSend.append('token', accessToken);
-      formDataToSend.append('profileImage', formData.profileImage); // Append the base64 string
-      
-      
 
-      // console.log(formData)
+      formDataToSend.append("firstName", formData.firstName);
+      formDataToSend.append("lastName", formData.lastName);
+      formDataToSend.append("email", formData.email);
+      formDataToSend.append("phoneNumber", formData.phoneNumber);
 
-      const response = await httpRequset.put(
-        UPDATE_PROFILE, 
-        formDataToSend, 
-        "PUT",
-        {
-          headers: {
-            // Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'multipart/form-data'
-          }
+      // Handle Address/Location
+      if (formData.companyLocation) {
+        // If it's an object (from Google Maps or parsed data)
+        if (typeof formData.companyLocation === "object") {
+          formDataToSend.append(
+            "companyLocation",
+            formData.companyLocation.address || ""
+          );
+          // if (formData.companyLocation.lat)
+          //   formDataToSend.append("address[lat]", formData.companyLocation.lat);
+          // if (formData.companyLocation.lng)
+          //   formDataToSend.append("address[lng]", formData.companyLocation.lng);
+        } else {
+          // If it's just a string
+          formDataToSend.append("companyLocation", formData.companyLocation);
         }
+      }
+
+      formDataToSend.append("emailNotifications", emailnotif);
+      formDataToSend.append("alertsDelivery", deliverynotif);
+      formDataToSend.append("token", accessToken);
+
+      if (formData.profileImage && formData.profileImage.startsWith("data:")) {
+        formDataToSend.append("profileImage", formData.profileImage);
+      }
+
+      // FIX 1: Set ID to NULL to avoid appending it to URL
+      const response = await submitData(
+        UPDATE_PROFILE,
+        formDataToSend,
+        user._id, // <--- ID is NULL so URL stays /api/v1/users
+        "PATCH"
       );
-      
-      dispatch(setUser({ user: response.data.user,userType:userType, accessToken }));
+
+      // FIX 2: Handle Response structure carefully
+      console.log("Update Response:", response);
+
+      // Check where the user object is inside the response
+      // Usually it's response.data.user or response.data.data
+      const updatedUser = response?.data?.user || response?.data?.data || user;
+
+      dispatch(
+        setUser({
+          user: updatedUser, // Save the correct object
+          userType: userType,
+          accessToken: accessToken, // Keep existing token
+        })
+      );
+
       setLoading(false);
       toast.success(response?.data?.message || "Profile updated successfully");
     } catch (error) {
@@ -152,8 +183,8 @@ const handlePlaceChanged = () => {
   return (
     <DashboardLayout>
       <div className="mt-8">
-        <ProfileGreen 
-          user={{ ...user, profileImage: imagePreview || user?.profileImage }} 
+        <ProfileGreen
+          user={{ ...user, profileImage: imagePreview || user?.profileImage }}
           handleImageChange={handleImageChange}
           fileInputRef={fileInputRef}
         />
@@ -174,6 +205,7 @@ const handlePlaceChanged = () => {
           </div>
 
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* FIRST NAME */}
             <div className="form-group !mb-1">
               <label>
                 First name <span className="required">*</span>
@@ -205,6 +237,8 @@ const handlePlaceChanged = () => {
                 </svg>
               </div>
             </div>
+
+            {/* LAST NAME */}
             <div className="form-group !mb-1">
               <label>
                 Last name <span className="required">*</span>
@@ -236,6 +270,8 @@ const handlePlaceChanged = () => {
                 </svg>
               </div>
             </div>
+
+            {/* EMAIL */}
             <div className="form-group !mb-1">
               <label>
                 Email address <span className="required">*</span>
@@ -267,6 +303,8 @@ const handlePlaceChanged = () => {
                 </svg>
               </div>
             </div>
+
+            {/* PHONE */}
             <div className="form-group !mb-1">
               <label>
                 Phone <span className="required">*</span>
@@ -284,43 +322,45 @@ const handlePlaceChanged = () => {
                 <FaHeadphonesAlt color="#B9BAC0" size={16} />
               </div>
             </div>
-          <div className="form-group !mb-1 relative">
-  <label className="block mb-1">
-    Address <span className="text-red-500">*</span>
-  </label>
-  
-  {isLoaded && (
-    <div className="relative">
-      <StandaloneSearchBox
-        onLoad={(ref) => (inputRef.current = ref)}
-        onPlacesChanged={handlePlaceChanged}
-      >
-        <input
-  type="text"
-  name="address"
-  className="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-  placeholder="Enter your address"
-  required
-  value={formData?.address?.address || ""}
-  onChange={(e) =>
-    setFormData((prev) => ({
-      ...prev,
-      address: {
-        ...prev.address,
-        address: e.target.value,
-      },
-    }))
-  }
-/>
 
-      </StandaloneSearchBox>
-      
-      <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-        <FaLocationDot size={16} className="text-gray-400" />
-      </div>
-    </div>
-  )}
-</div>
+            {/* ADDRESS */}
+            <div className="form-group !mb-1 relative">
+              <label className="block mb-1">
+                Address <span className="text-red-500">*</span>
+              </label>
+
+              {isLoaded && (
+                <div className="relative">
+                  <StandaloneSearchBox
+                    onLoad={(ref) => (inputRef.current = ref)}
+                    onPlacesChanged={handlePlaceChanged}
+                  >
+                    <input
+                      type="text"
+                      name="address"
+                      className="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Enter your address"
+                      required
+                      // Handle value safely checking if companyLocation is object or string
+                      value={formData.companyLocation}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          companyLocation: {
+                            ...prev.companyLocation,
+                            address: e.target.value,
+                          },
+                        }))
+                      }
+                    />
+                  </StandaloneSearchBox>
+
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                    <FaLocationDot size={16} className="text-gray-400" />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -376,12 +416,12 @@ const handlePlaceChanged = () => {
         </div>
 
         <div className="flex justify-end">
-          <button 
+          <button
             className="auth_button mt-3 mb-3 !w-[200px]"
             onClick={updateProfile}
             disabled={loading}
           >
-            <span>{loading ?  "Processing..." : 'Save Changes'}</span>
+            <span>{loading ? "Processing..." : "Save Changes"}</span>
           </button>
         </div>
       </div>

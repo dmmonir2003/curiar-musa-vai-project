@@ -474,12 +474,12 @@ const DashboardLayout = ({ children }) => {
             >
               <span>
                 <img
-                  src={user?.profileImage || SMALLLOGO}
+                  src={user?.profileImg || SMALLLOGO}
                   className="w-[32px] h-[32px] rounded-full object-cover"
                 />
               </span>
               <span className="uppercase truncate max-w-xs overflow-hidden text-ellipsis whitespace-nowrap">
-                {user?.firstName + " " + user?.lastName}
+                {user?.name?.firstName + " " + user?.name?.lastName}
               </span>
             </Link>
           </div>
@@ -498,8 +498,8 @@ const DashboardLayout = ({ children }) => {
 
       <div className="border-0 w-[95%] md:w-[79%] border-red-800 mx-auto mt-4 mb-[50px] md:ml-[300px] ">
         <div className="header_top flex justify-between items-center py-5  sticky top-0 z-10">
-          <h1 className="font-bold text-[17px] truncate md:truncate-none capitalize">
-            Welcome {user?.firstName} {user?.lastName} ({usertype})
+          <h1 className="font-bold  rounded-full p-2 px-4 bg-white text-xs shadow-sm  truncate md:truncate-none capitalize">
+            Welcome {user?.name?.firstName} {user?.name?.lastName} ({usertype})
           </h1>
           <div className="flex items-center gap-3">
             {/* <div className="rounded-full p-2 px-4 bg-white text-xs flex items-center gap-3 shadow-sm cursor-pointer">

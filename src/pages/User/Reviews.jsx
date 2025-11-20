@@ -31,7 +31,7 @@ const Reviews = () => {
       const response = await fetchData(`${RATINGS}`);
       // console.log(response?.data?.data?.data, "dfdsffff");
       setAverageReviewsInfo(response?.data?.data?.data);
-      setReviews(response?.data?.data?.data);
+      // setReviews(response?.data?.data?.data);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -43,9 +43,8 @@ const Reviews = () => {
     try {
       setLoading(true);
       const response = await fetchData(`${REVIEWS}`);
-      console.log(response?.data?.data?.data, "all reviews");
-      // setAverageReviewsInfo(response?.data?.data?.data);
-      setReviews(response?.data?.data?.data);
+
+      setReviews(response?.data?.data?.result);
       setLoading(false);
     } catch (error) {
       setLoading(false);
