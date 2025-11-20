@@ -1,4 +1,3 @@
- 
 /* eslint-disable react/prop-types */
 import React from "react";
 import UserImage from "./../assets/user_image.jpg";
@@ -13,14 +12,14 @@ const ProfileGreen = ({
   user,
   handleImageChange,
   fileInputRef,
-  rating
+  // rating,
 }) => {
-   
-
-  const fullStars = rating && Math.floor(rating) || 0;
-  const hasHalfStar = rating % 1 >= 0.25 && rating % 1 <= 0.75;
+  const fullStars =
+    (user?.averageRatings && Math.floor(user?.averageRatings)) || 0;
+  const hasHalfStar =
+    user?.averageRatings % 1 >= 0.25 && user?.averageRatings % 1 <= 0.75;
   const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-  
+
   const userdata = useSelector(selectUser);
   // console.log(userdata, "user")
   return (
@@ -65,22 +64,30 @@ const ProfileGreen = ({
         </div>
         <div className="text-white flex flex-col gap-2">
           <h1 className="font-bold text-xl uppercase">
-            {user?.firstName} {user?.lastName}
+            {user?.name?.firstName} {user?.name?.lastName}
           </h1>
           {lastSegment === "reviews" ? (
             <>
               <p className="text-[15px]">{user?.email}</p>
               <p className="flex items-center gap-4">
                 <div className="flex items-center gap-[2px]">
-                   {Array(fullStars)?.fill()?.map((_, i) => (
-        <GiRoundStar key={`full-${i}`} size={16} color="gold" />
-      ))}
-      {hasHalfStar && <FaStarHalfAlt size={16} color="gold" />}
-      {Array(emptyStars).fill().map((_, i) => (
-        <MdOutlineStar key={`empty-${i}`} size={16} color="gold" />
-      ))}
+                  {Array(fullStars)
+                    ?.fill()
+                    ?.map((_, i) => (
+                      <GiRoundStar key={`full-${i}`} size={16} color="gold" />
+                    ))}
+                  {hasHalfStar && <FaStarHalfAlt size={16} color="gold" />}
+                  {Array(emptyStars)
+                    .fill()
+                    .map((_, i) => (
+                      <MdOutlineStar
+                        key={`empty-${i}`}
+                        size={16}
+                        color="gold"
+                      />
+                    ))}
                 </div>
-                <span>{rating} star Rating</span>
+                <span>{user?.averageRatings} star Rating</span>
               </p>
             </>
           ) : (

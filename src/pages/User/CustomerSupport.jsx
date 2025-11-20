@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable react/no-unescaped-entities */
+
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "../../Layouts/Dashboard";
 import Support from "./../../assets/amico.svg";
@@ -11,7 +11,16 @@ import useCreateOrEdit from "../../hooks/useCreateOrEdit";
 import toast from "react-hot-toast";
 import { CONTACT_US } from "../../constants";
 
-const MesssageBox = ({ loading,name, email, message, onNameChange, onEmailChange, onMessageChange, onSubmit }) => {
+const MesssageBox = ({
+  loading,
+  name,
+  email,
+  message,
+  onNameChange,
+  onEmailChange,
+  onMessageChange,
+  onSubmit,
+}) => {
   return (
     <form onSubmit={onSubmit}>
       <div className="form-group mt-6">
@@ -88,7 +97,11 @@ const MesssageBox = ({ loading,name, email, message, onNameChange, onEmailChange
         ></textarea>
       </div>
       <div className="flex justify-end">
-        <button type="submit" className="auth_button mt-0 mb-3 !w-[120px] flex items-center justify-center gap-3" disabled={loading}>
+        <button
+          type="submit"
+          className="auth_button mt-0 mb-3 !w-[120px] flex items-center justify-center gap-3"
+          disabled={loading}
+        >
           <span>
             <svg
               width="18"
@@ -106,7 +119,7 @@ const MesssageBox = ({ loading,name, email, message, onNameChange, onEmailChange
               />
             </svg>
           </span>
-          <span>{loading ?  'Sending' : 'Send'}</span>
+          <span>{loading ? "Sending" : "Send"}</span>
         </button>
       </div>
     </form>
@@ -122,9 +135,9 @@ const DashboardUser = () => {
   const user = useSelector(selectUser);
   const { submitData } = useCreateOrEdit();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
+    name: "",
+    email: "",
+    message: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -133,47 +146,50 @@ const DashboardUser = () => {
   useEffect(() => {
     const userType = localStorage.getItem("type");
     setUsertype(userType);
-    
+
     if (user?.firstName) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        name: `${user.firstName} ${user.lastName || ''}`,
-        email: user.email || ''
+        name: `${user.firstName} ${user.lastName || ""}`,
+        email: user.email || "",
       }));
     }
   }, [user]);
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) {
       toast.error("Please fill all required fields");
       return;
     }
     setLoading(true);
-    try{
-       const res = await submitData(CONTACT_US,formData,"POST");
-    toast.success(res?.data?.message || "Message sent successfully");
-    // Optionally reset form after submission
-    setFormData({
-      name: `${user?.firstName} ${user?.lastName || ''}`,
-      email: user?.email || '',
-      message: ''
-    });
-
-    }catch(err){
+    const bodyData = formData;
+    console.log(bodyData);
+    try {
+      const res = await submitData(CONTACT_US, bodyData, "POST");
+      toast.success(res?.data?.message || "Message sent successfully");
+      // Optionally reset form after submission
+      setFormData({
+        name: `${user?.firstName} ${user?.lastName || ""}`,
+        email: user?.email || "",
+        message: "",
+      });
+    } catch (err) {
       console.error(err);
-      toast.error(err.response.data.message || "An error occurred while sending your message");
-    }finally{
+      toast.error(
+        err.response.data.message ||
+          "An error occurred while sending your message"
+      );
+    } finally {
       setLoading(false);
     }
-   
   };
 
   return (
@@ -196,9 +212,9 @@ const DashboardUser = () => {
               name={formData.name}
               email={formData.email}
               message={formData.message}
-              onNameChange={(value) => handleInputChange('name', value)}
-              onEmailChange={(value) => handleInputChange('email', value)}
-              onMessageChange={(value) => handleInputChange('message', value)}
+              onNameChange={(value) => handleInputChange("name", value)}
+              onEmailChange={(value) => handleInputChange("email", value)}
+              onMessageChange={(value) => handleInputChange("message", value)}
               loading={loading}
               onSubmit={handleSubmit}
             />
@@ -283,9 +299,11 @@ const DashboardUser = () => {
                     name={formData.name}
                     email={formData.email}
                     message={formData.message}
-                    onNameChange={(value) => handleInputChange('name', value)}
-                    onEmailChange={(value) => handleInputChange('email', value)}
-                    onMessageChange={(value) => handleInputChange('message', value)}
+                    onNameChange={(value) => handleInputChange("name", value)}
+                    onEmailChange={(value) => handleInputChange("email", value)}
+                    onMessageChange={(value) =>
+                      handleInputChange("message", value)
+                    }
                     onSubmit={handleSubmit}
                   />
                 </div>
@@ -295,9 +313,11 @@ const DashboardUser = () => {
         </>
       )}
 
-       <div className="fixed bottom-0 right-0 mb-3 mr-3">
+      <div className="fixed bottom-0 right-0 mb-3 mr-3">
         <div className="flex items-center gap-2 bg-[var(--primary-color)] float-left px-5 py-4 rounded-full">
-          <p className="font-semibold text-white mr-4 uppercase">Urgency with a transport</p>
+          <p className="font-semibold text-white mr-4 uppercase">
+            Urgency with a transport
+          </p>
           <div className="cursor-pointer">
             <svg
               width="26"
@@ -328,7 +348,7 @@ const DashboardUser = () => {
               </defs>
             </svg>
           </div>
-          <div className="cursor-pointer" >
+          <div className="cursor-pointer">
             <svg
               width="26"
               height="25"

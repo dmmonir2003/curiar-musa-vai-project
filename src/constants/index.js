@@ -3,6 +3,7 @@ export const MAPS_API_KEY = import.meta.env.VITE_REACT_APP_MAPS_API_KEY;
 
 export const REGISTER_USER = "/users/create-user";
 export const REGISTER_COURIER = "/users/create-user";
+export const GET_ME = "/users/me";
 // export const REGISTER_USER = "/user/register";
 // export const REGISTER_COURIER = "/courier/register";
 export const LOGIN_USER = "/user/login";
@@ -14,7 +15,8 @@ export const UPDATE_PROFILE = "/user/update-profile";
 export const FORGOT_PASSWORD = "/user/forgot-password";
 export const VERIFY_OTP = "/user/verify-otp";
 export const RESET_PASSWORD = "/user/reset-password";
-export const CONTACT_US = "/user/contact-us";
+export const CONTACT_US = "/contacts/create-contact";
+// export const CONTACT_US = "/user/contact-us";
 
 //
 export const NEW_COURIER_REQUEST = "/courier-request/new-courier-request";
@@ -27,9 +29,11 @@ export const GET_ALL_JOBS = "/jobs";
 export const GET_COURIER_SHIPMENTS = "/jobs/user";
 // export const GET_COURIER_SHIPMENTS = "/courier-request/get-courier-shipments";
 export const ACCEPT_JOB = "/jobs"; //TODO: working now as accept-job
-export const REVIEWS = "/reviews";
 export const GET_LOCATIONS = "/courier-request/locations";
-export const GET_ROUTES = "/jobs/daily-route?pickupDate=";
+// export const REVIEWS = "/users";
+export const RATINGS = "/ratings/average-elements";
+export const REVIEWS = "/testimonials";
+export const GET_ROUTES = "/jobs/daily-route";
 // export const GET_ROUTES = "/courier-routes/date";
 export const ADD_DAILY_ROUTES = "/courier-routes/add";
 export const CANCEL_DAILY_ROUTES = "/courier-routes/cancel-route";

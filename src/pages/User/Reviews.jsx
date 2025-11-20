@@ -9,7 +9,7 @@ import { FaHeadphonesAlt } from "react-icons/fa";
 import ProfileGreen from "../../Components/ProfileGreen";
 import { GiRoundStar } from "react-icons/gi";
 import useFetch from "../../hooks/useFetch";
-import { REVIEWS } from "../../constants";
+import { RATINGS, REVIEWS } from "../../constants";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/userSlice";
 import toast from "react-hot-toast";
@@ -25,12 +25,27 @@ const Reviews = () => {
   const user = useSelector(selectUser);
   const { fetchData } = useFetch();
 
+  const fetchRatingData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetchData(`${RATINGS}`);
+      // console.log(response?.data?.data?.data, "dfdsffff");
+      setAverageReviewsInfo(response?.data?.data?.data);
+      setReviews(response?.data?.data?.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      // toast.error(error)
+      console.error("Error fetching reviews:", error);
+    }
+  };
   const fetchReviewData = async () => {
     try {
       setLoading(true);
-      const response = await fetchData(`${REVIEWS}/courier/${user?._id}`);
-      setAverageReviewsInfo(response.data?.averageRatings);
-      setReviews(response.data?.reviews);
+      const response = await fetchData(`${REVIEWS}`);
+      console.log(response?.data?.data?.data, "all reviews");
+      // setAverageReviewsInfo(response?.data?.data?.data);
+      setReviews(response?.data?.data?.data);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -40,6 +55,7 @@ const Reviews = () => {
   };
 
   useEffect(() => {
+    fetchRatingData();
     fetchReviewData();
   }, []);
 
@@ -49,13 +65,13 @@ const Reviews = () => {
         <ProfileGreen
           lastSegment={lastSegment}
           user={user}
-          rating={averageReviewsInfo?.total}
+          // rating={averageReviewsInfo?.total}
         />
 
         <h1 className="font-bold text-[17px] w-full flex items-end gap-2">
           <span>Average Rating (Total)</span>
           <span className="text-4xl font-bold text-[var(--primary-color)]">
-            {averageReviewsInfo?.total}/5
+            {user?.averageRatings}/5
           </span>
         </h1>
         <p className="!text-[13px] text-[#242325] mt-1">
@@ -67,9 +83,9 @@ const Reviews = () => {
             <span className="text-[#242325] text-[14px]">Professionalism</span>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-[1.4px]">
-                {
-                Array.from(
+                {Array.from(
                   { length: Number(averageReviewsInfo?.professionalism) },
+
                   (_, index) => (
                     <GiRoundStar key={index} color="#FFB129" size={14} />
                   )

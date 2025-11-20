@@ -1,4 +1,3 @@
-/* eslint-disable no-irregular-whitespace */
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "../../Layouts/Dashboard";
 import UserImage from "./../../assets/user_image.jpg";
@@ -9,15 +8,14 @@ import ModalPopup from "../../Components/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser, selectUser } from "../../store/userSlice";
 
-
 const More = () => {
   const user = useSelector(selectUser);
   const navigate = useNavigate();
   const urlPath = window.location.pathname;
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
-   const [modalOpen, setModalOpen] = useState(false);
-   
+  const [modalOpen, setModalOpen] = useState(false);
+
   const lastSegment = urlPath.split("/").filter(Boolean).pop();
   const [usertype, setUsertype] = useState(localStorage.getItem("type"));
   const [active, setActive] = useState(null);
@@ -31,8 +29,8 @@ const More = () => {
     // localStorage.clear();
     dispatch(clearUser());
     // localStorage.clear();
-     Object.keys(localStorage).forEach((key) => {
-      if ( key !== 'messages') {
+    Object.keys(localStorage).forEach((key) => {
+      if (key !== "messages") {
         localStorage.removeItem(key);
       }
     });
@@ -63,18 +61,28 @@ const More = () => {
       <div className=" w-full relative mb-4 px-5">
         <div className="flex items-center gap-6 w-full">
           <div className="">
-            <img src={user?.profileImage || UserImage} className=" w-[96px] h-[96px] rounded-full object-cover" />
+            <img
+              src={user?.profileImage || UserImage}
+              className=" w-[96px] h-[96px] rounded-full object-cover"
+            />
           </div>
           <div className="text-white flex flex-col gap-1">
-            <h1 className="font-bold text-xl text-[#000]">{user?.firstName} {user?.lastName}</h1>
-            <div className="text-[var(--light-color-text)]">Courier Account</div>
+            <h1 className="font-bold text-xl text-[#000]">
+              {user?.firstName} {user?.lastName}
+            </h1>
+            <div className="text-[var(--light-color-text)]">
+              Courier Account
+            </div>
           </div>
         </div>
 
         <div className="mt-14">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* INBOX */}
-            <div onClick={() => navigate("/chat")} className="white_box p-4 flex justify-between items-center gap-3 !rounded-lg border hover:border-[#ccc] cursor-pointer">
+            <div
+              onClick={() => navigate("/chat")}
+              className="white_box p-4 flex justify-between items-center gap-3 !rounded-lg border hover:border-[#ccc] cursor-pointer"
+            >
               <div className="flex justify-between items-center gap-3">
                 <svg
                   width="17"
@@ -99,7 +107,10 @@ const More = () => {
               </div>
             </div>
             {/* REVIEWS */}
-            <div onClick={() => navigate("/reviews")} className="white_box p-4 flex justify-between items-center gap-3 !rounded-lg border hover:border-[#ccc] cursor-pointer">
+            <div
+              onClick={() => navigate("/reviews")}
+              className="white_box p-4 flex justify-between items-center gap-3 !rounded-lg border hover:border-[#ccc] cursor-pointer"
+            >
               <div className="flex justify-between items-center gap-3">
                 <svg
                   width="18"
@@ -124,7 +135,10 @@ const More = () => {
               </div>
             </div>
             {/* ACCOUNT */}
-            <div onClick={() => navigate("/update-profile")} className="white_box p-4 flex justify-between items-center gap-3 !rounded-lg border hover:border-[#ccc] cursor-pointer">
+            <div
+              onClick={() => navigate("/update-profile")}
+              className="white_box p-4 flex justify-between items-center gap-3 !rounded-lg border hover:border-[#ccc] cursor-pointer"
+            >
               <div className="flex justify-between items-center gap-3">
                 <svg
                   width="16"
@@ -182,7 +196,10 @@ const More = () => {
             </div> */}
 
             {/* Change Password */}
-            <div onClick={() => setModalOpen(true)} className="white_box p-4 flex justify-between items-center gap-3 !rounded-lg border hover:border-[#ccc] cursor-pointer">
+            <div
+              onClick={() => setModalOpen(true)}
+              className="white_box p-4 flex justify-between items-center gap-3 !rounded-lg border hover:border-[#ccc] cursor-pointer"
+            >
               <div className="flex justify-between items-center gap-3">
                 <svg
                   width="16"
@@ -206,7 +223,10 @@ const More = () => {
               </div>
             </div>
             {/* Logout */}
-            <div onClick={handleLogout} className="white_box p-4 flex justify-between items-center gap-3 !rounded-lg border hover:border-[#ccc] cursor-pointer">
+            <div
+              onClick={handleLogout}
+              className="white_box p-4 flex justify-between items-center gap-3 !rounded-lg border hover:border-[#ccc] cursor-pointer"
+            >
               <div className="flex justify-between items-center gap-3">
                 <svg
                   width="16"
