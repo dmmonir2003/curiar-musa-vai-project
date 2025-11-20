@@ -363,7 +363,7 @@ const JobLayoutDriverActive = ({
         </div>
 
         <div className="font-bold text-3xl text-[var(--primary-color)]">
-          ${job?.totalPrice}
+          ${job?.courierPrice || "100"}
         </div>
       </div>
       <div className="mt-2">

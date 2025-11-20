@@ -205,7 +205,7 @@ const CourierLogin = () => {
       const response = await submitData(
         LOGIN_COURIER,
         { email, password },
-        null,
+
         "POST"
       );
 

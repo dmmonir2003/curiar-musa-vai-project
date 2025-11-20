@@ -179,14 +179,16 @@ const JobsSidePopupData = ({ type, close, job }) => {
 
   const handleAcceptJob = async () => {
     setIsLoading(true);
+    const method = "PATCH";
     try {
       // Use currentJob._id
       const response = await submitData(
         `${ACCEPT_JOB}/${currentJob?._id}`,
+
         {
           status: "accepted",
         },
-        "PATCH"
+        method
       );
       toast.success(response?.data?.message);
       navigate("/my-shipments");
@@ -337,7 +339,7 @@ const JobsSidePopupData = ({ type, close, job }) => {
           <>
             <div className="flex items-center gap-2 mt-6 mb-4">
               <span className="text-[var(--primary-color)] text-4xl font-bold">
-                ${currentJob?.totalPrice}
+                ${currentJob?.courierPrice || "100"}
               </span>
             </div>
 
@@ -351,7 +353,7 @@ const JobsSidePopupData = ({ type, close, job }) => {
                   : "No Extra Helpers"}
               </div>
               <div className="pills_address capitalize">
-                Floor - {currentJob?.extraService?.floor?.level}
+                Floor - {currentJob?.extraService?.floor?.options}
               </div>
             </div>
 

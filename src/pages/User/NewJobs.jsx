@@ -251,7 +251,7 @@ const RequestsDataDriver = () => {
               <h2 className="font-bold text-[15px]">Jobs</h2>
             </div>
             <div className="flex gap-2 items-center md:w-auto w-full justify-center md:justify-end">
-              <button
+              {/* <button
                 className="rounded-full px-5 flex items-center gap-2 py-2 !bg-white !text-[var(--text-color)]"
                 onClick={() => openModal()}
               >
@@ -271,7 +271,7 @@ const RequestsDataDriver = () => {
                     strokeLinejoin="round"
                   />
                 </svg>
-              </button>
+              </button> */}
             </div>
           </div>
 
